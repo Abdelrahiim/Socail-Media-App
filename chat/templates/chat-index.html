@@ -1,0 +1,111 @@
+{% extends 'chat-base.html' %} {% block title %}Chat{% endblock %}
+{% block body%}
+
+@{{user.username}}
+<a href = "{% url 'chat' %}"><h1
+  class="display-4 position-relative top-0 start-50 translate-middle-x text-bg-dark border border-dark rounded-pill text-center">
+  Gaming Garage Chat
+</h1>
+</a>
+
+<form class="mb-3" action = "" method = "POST">
+  {% csrf_token %}
+  <div class="row g-3">
+      <div class="col-10">
+      <input name = "search" type="text" class="form-control" placeholder="Search For Users">
+      </div>
+      <div class="col-2">
+      <button class="btn btn-primary">Search</button>
+      {% comment %} <a href = "{% url 'chat' %}" class = "btn btn-info"> Home </a> {% endcomment %}
+    </div>
+  </div>
+</form>
+
+<hr>
+{%if following_users%}
+<table class="table table-dark">
+  <thead>
+    <tr>
+
+      <th scope="col">username</th>
+      <th scope="col">Email</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for profile in following_users %}
+    
+    <tr>
+
+      <td>
+        <a class="navbar-brand" href="{% url 'profile' profile.user.username %}">
+          <img src="{{profile.profileimg.url}}" height="20" alt="" loading="lazy"
+            class="rounded" />:{{profile.user.username}}
+        </a>
+      </td>
+      <td>{{profile.user.email}}</td>
+      <td>
+        <a href="{% url 'room' profile.user.username  %}">
+          <span class="material-symbols-outlined"> chat </span>
+        </a>
+      </td>
+    </tr>
+    
+    {% endfor %}
+  </tbody>
+</table>
+{%else%}
+<div class="d-grid gap-2">
+  <div class="btn btn-danger btn-lg">
+    <h1> No Results</h1>
+  </div>
+
+</div>
+{%endif%}
+
+<!-- pagination Section -->
+<nav>
+  {% if following_users.has_other_pages %}
+  <ul class="pagination">
+    {% if following_users.has_previous %}
+    <li class="page-item">
+      <a class="page-link" href="?page=1">First</a>
+    </li>
+    <li class="page-item">
+      <a class="page-link" href="?page={{ following_users.previous_page_number }}">Previous</a>
+    </li>
+    {% else %}
+    <li class="page-item disabled">
+      <a class="page-link" href="#" aria-label="Previous">
+        <span aria-hidden="true">First</span>
+      </a>
+    </li>
+    <li class="page-item disabled">
+      <a class="page-link" href="#" aria-label="Previous">
+        <span aria-hidden="true">Previous</span>
+      </a>
+    </li>
+
+    {% endif %} {% for i in following_users.paginator.page_range %}
+    {% if following_users.number == i %}
+    <li class="page-item active"><span class="page-link">{{ i }} </span></li>
+
+    {% else %}
+    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+    {% endif %}
+    {% endfor %}
+    {% if following_users.has_next %}
+    <li class="page-item"><a class="page-link" href="?page={{ following_users.next_page_number }}">Next</a></li>
+    <li class="page-item"><a class="page-link" href="?page={{ following_users.paginator.num_pages }}">Last</a></li>
+    {% else %}
+    <a class="page-link disabled " href="#" aria-label="Previous">
+      <span aria-hidden="true">Next</span>
+    </a>
+    <a class="page-link disabled " href="#" aria-label="Previous">
+      <span aria-hidden="true">Last</span>
+    </a>
+    {% endif %}
+  </ul>
+  {% endif %}
+  {% endblock %}
+</nav>

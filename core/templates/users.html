@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{%block title %} All Users {% endblock%}
+{% load static %}
+{% block body %}
+
+
+<div class="min-h-screen bg-red-800 py-5">
+  <div class='overflow-x-auto w-full'>
+      <table class='mx-auto max-w-4xl w-full whitespace-nowrap rounded-lg bg-white divide-y divide-gray-300 overflow-hidden'>
+          <thead class="bg-gray-900">
+              <tr class="text-white text-left">
+                  <th class="font-semibold text-sm uppercase px-6 py-4"> Name </th>
+                  <th class="font-semibold text-sm uppercase px-6 py-4"> Email </th>
+                  <th class="font-semibold text-sm uppercase px-6 py-4"> Location </th>
+                  <th class="font-semibold text-sm uppercase px-6 py-4"> profile image </th>
+              </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            {% for profile in users %}
+              <tr>
+                  <td class="px-6 py-4">
+                          <div class = "text-center">
+                              <p > {{profile.user.username}} </p>
+                          </div>
+                      </div>
+                  </td>
+                  <td class="px-6 py-4">
+                      <p class="text-center"> {{profile.user.email}} </p>
+                  </td>
+                  <td class="px-6 py-4">
+                    <p class="text-center"> {{profile.location}} </p>
+                </td>
+                <td class="px-6 py-4">
+                    <div style = " width:50%; ">
+                    <a href = "{% url 'profile' profile.user.username %}" >
+                    <img class="image flex items-center" width ="64px" height="64" src = {{profile.profileimg.url}} />
+                    </a>
+                    </div>
+                </td>
+                </tr>
+          {% endfor %}     
+        </tbody>
+    </table>
+</div>
+</div>
+{% endblock%}
